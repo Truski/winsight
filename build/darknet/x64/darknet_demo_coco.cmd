@@ -1,6 +1,6 @@
 
 
-darknet.exe detector demo data/coco.data yolo.cfg yolo.weights test.mp4 -i 0 
+darknet.exe detector demo data/obj.data yolo-obj.cfg volleyball-2000.weights -c 0  
 
 
 pause
