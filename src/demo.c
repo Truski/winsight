@@ -80,7 +80,7 @@ void write_position(image im, int num, float thresh, box *boxes, float **probs, 
 	float avgY = (count == 0) ? 0 : totalY / count;
 	printf("\nFPS: %f, (%f, %f)\n", fps, avgX, avgY);
 
-	fprintf(fp, "FPS: %f, (%f, %f)\n", fps, avgX, avgY);
+	fprintf(fp, "FPS: %f, %f, %f\n", fps, avgX, avgY);
 	fflush(fp);
 }
 
