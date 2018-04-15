@@ -11,6 +11,8 @@
 #include <time.h>
 #include <winsock.h>
 #include "gettimeofday.h"
+//#include <iostream>
+//#include <fstream>
 
 #define FRAMES 3
 
@@ -50,6 +52,50 @@ void *fetch_in_thread(void *ptr)
     return 0;
 }
 
+void write_position(image im, int num, float thresh, box *boxes, float **probs, char **names, image **alphabet, int classes, float fps)
+{
+	int i;
+	int count = 0;
+	float totalX = 0;
+	float totalY = 0;
+	static int fileOpened = 0;
+
+	//static std::ofstream myfile;
+
+	//if (fileOpened == 0) {
+	//	myfile.open("output.txt");
+	//	fileOpened = 1;
+	//}
+
+	static FILE *fp;
+
+	if (fileOpened == 0) {
+		fp = fopen("output.txt", "w+");
+		fileOpened = 1;
+	}
+	
+
+	for (i = 0; i < num; ++i) {
+		int class = max_index(probs[i], classes);
+		float prob = probs[i][class];
+		if (prob > thresh) {
+			printf("%s: %.0f%%\n", names[class], prob * 100);
+			box b = boxes[i];
+			count++;
+			totalX = totalX + b.x;
+			totalY = totalY + b.y;
+		}
+	}
+	float avgX = (count == 0) ? 0 : totalX / count;
+	float avgY = (count == 0) ? 0 : totalY / count;
+	printf("\nFPS: %f, (%f, %f)\n", fps, avgX, avgY);
+
+	//myfile << fps << ',' << avgX << ',' << avgY << endl;
+
+	fprintf(fp, "FPS: %f, (%f, %f)\n", fps, avgX, avgY);
+	fflush(fp);
+}
+
 void *detect_in_thread(void *ptr)
 {
     float nms = .4;
@@ -81,6 +127,8 @@ void *detect_in_thread(void *ptr)
     demo_index = (demo_index + 1)%FRAMES;
 
     draw_detections(det, l.w*l.h*l.n, demo_thresh, boxes, probs, demo_names, demo_alphabet, demo_classes);
+
+	write_position(det, l.w*l.h*l.n, demo_thresh, boxes, probs, demo_names, demo_alphabet, demo_classes, fps);
 
     return 0;
 }
