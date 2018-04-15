@@ -11,8 +11,6 @@
 #include <time.h>
 #include <winsock.h>
 #include "gettimeofday.h"
-//#include <iostream>
-//#include <fstream>
 
 #define FRAMES 3
 
@@ -59,21 +57,13 @@ void write_position(image im, int num, float thresh, box *boxes, float **probs, 
 	float totalX = 0;
 	float totalY = 0;
 	static int fileOpened = 0;
-
-	//static std::ofstream myfile;
-
-	//if (fileOpened == 0) {
-	//	myfile.open("output.txt");
-	//	fileOpened = 1;
-	//}
-
 	static FILE *fp;
 
 	if (fileOpened == 0) {
 		fp = fopen("output.txt", "w+");
 		fileOpened = 1;
 	}
-	
+
 
 	for (i = 0; i < num; ++i) {
 		int class = max_index(probs[i], classes);
@@ -89,8 +79,6 @@ void write_position(image im, int num, float thresh, box *boxes, float **probs, 
 	float avgX = (count == 0) ? 0 : totalX / count;
 	float avgY = (count == 0) ? 0 : totalY / count;
 	printf("\nFPS: %f, (%f, %f)\n", fps, avgX, avgY);
-
-	//myfile << fps << ',' << avgX << ',' << avgY << endl;
 
 	fprintf(fp, "FPS: %f, (%f, %f)\n", fps, avgX, avgY);
 	fflush(fp);
