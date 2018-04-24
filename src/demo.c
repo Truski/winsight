@@ -56,20 +56,20 @@ void write_position(image im, int num, float thresh, box *boxes, float **probs, 
 	int count = 0;
 	float totalX = 0;
 	float totalY = 0;
-	static int fileOpened = 0;
-	static FILE *fp;
+	//static int fileOpened = 0;
+	//static FILE *fp;
 
-	if (fileOpened == 0) {
-		fp = fopen("output.txt", "w+");
-		fileOpened = 1;
-	}
+	//if (fileOpened == 0) {
+	//	fp = fopen("output.txt", "w+");
+	//	fileOpened = 1;
+	//}
 
 
 	for (i = 0; i < num; ++i) {
 		int class = max_index(probs[i], classes);
 		float prob = probs[i][class];
 		if (prob > thresh) {
-			printf("%s: %.0f%%\n", names[class], prob * 100);
+			//printf("%s: %.0f%%\n", names[class], prob * 100);
 			box b = boxes[i];
 			count++;
 			totalX = totalX + b.x;
@@ -78,10 +78,11 @@ void write_position(image im, int num, float thresh, box *boxes, float **probs, 
 	}
 	float avgX = (count == 0) ? 0 : totalX / count;
 	float avgY = (count == 0) ? 0 : totalY / count;
-	printf("\nFPS: %f, (%f, %f)\n", fps, avgX, avgY);
+	//printf("\nFPS: %f, (%f, %f)\n", fps, avgX, avgY);
 
-	fprintf(fp, "%f, %f, %f\n", fps, avgX, avgY);
-	fflush(fp);
+	//fprintf(fp, "%f, %f, %f\n", fps, avgX, avgY);
+	//fflush(fp);
+	printf("%f, %f\n", avgX, avgY);
 }
 
 void *detect_in_thread(void *ptr)
@@ -105,10 +106,10 @@ void *detect_in_thread(void *ptr)
         error("Last layer must produce detections\n");
     }
     if (nms > 0) do_nms(boxes, probs, l.w*l.h*l.n, l.classes, nms);
-    printf("\033[2J");
-    printf("\033[1;1H");
-    printf("\nFPS:%.1f\n",fps);
-    printf("Objects:\n\n");
+    //printf("\033[2J");
+    //printf("\033[1;1H");
+    //printf("\nFPS:%.1f\n",fps);
+    //printf("Objects:\n\n");
 
     images[demo_index] = det;
     det = images[(demo_index + FRAMES/2 + 1)%FRAMES];
