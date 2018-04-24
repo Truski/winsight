@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<style>
+		body{
+			font-size: 40vh;
+			font-family: Arial;
+			background-color: #111111;
+			color: #eeeeee;
+		}
+		#mine {
+			display: flex;
+			align-content: center;
+			justify-content: center;
+			padding-top: 10vh;
+		}
+		.flash {
+		  -moz-animation: flash 1s ease-out;
+		  -moz-animation-iteration-count: 1;
+
+		  -webkit-animation: flash 1s ease-out;
+		  -webkit-animation-iteration-count: 1;
+
+		  -ms-animation: flash 1s ease-out;
+		  -ms-animation-iteration-count: 1;
+		}
+
+		@keyframes flash {
+		    0% { background-color: #111111; }
+		    50% { background-color: #0000ff; }
+		    100% { background-color: #111111; }
+		}
+
+		#angle {
+			margin-top:12vh;
+			font-size: 40%; 
+			text-align: center;
+		}
+		</style>
+	</head>
+	<body id="bod">
+		<div id="angle">Set Angle</div>
+		<div id="mine">
+			<span id="xd">56</span>&deg;
+		</div>
+	</body>
+	<script>
+		var eventSource = new EventSource("num.php");
+		eventSource.addEventListener('message', function(e) {
+			document.getElementById("xd").innerHTML = e.data;
+			document.getElementById("bod").classList.add('flash');
+			setTimeout(function(){
+				document.getElementById("bod").classList.remove('flash');
+			}, 1500);
+		});
+	</script>
+</html>
